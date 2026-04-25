@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -14,10 +15,22 @@ class Config:
 
 def load_config(config_path: str = "config.json") -> Config:
     path = Path(config_path)
+    env_token = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
+    env_db_path = os.getenv("DATABASE_PATH", "bot_data.json").strip() or "bot_data.json"
+    env_base_url = os.getenv("MAIL_TM_BASE_URL", "https://api.mail.tm").strip() or "https://api.mail.tm"
+
+    # Cloud-friendly mode: allow running fully from environment variables.
+    if env_token:
+        return Config(
+            telegram_bot_token=env_token,
+            database_path=env_db_path,
+            mail_tm_base_url=env_base_url,
+        )
+
     if not path.exists():
         raise FileNotFoundError(
             f"Config file not found at '{config_path}'. "
-            "Copy config.example.json to config.json and add your Telegram bot token."
+            "Either create config.json or set TELEGRAM_BOT_TOKEN environment variable."
         )
 
     raw = json.loads(path.read_text(encoding="utf-8"))

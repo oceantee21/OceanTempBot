@@ -26,7 +26,7 @@ pip install -r requirements.txt
 
 ## 2) Configure bot token
 
-Copy the example config:
+### Option A: local config file
 
 ```bash
 cp config.example.json config.json
@@ -40,6 +40,14 @@ You can also change:
 
 - `database_path`: where user/mailbox data is stored
 - `mail_tm_base_url`: temp mail API base URL
+
+### Option B: environment variables (recommended for Render/Koyeb/Railway)
+
+Set these variables in your cloud dashboard:
+
+- `TELEGRAM_BOT_TOKEN` (required)
+- `DATABASE_PATH` (optional, default `bot_data.json`)
+- `MAIL_TM_BASE_URL` (optional, default `https://api.mail.tm`)
 
 ## 3) Run
 
