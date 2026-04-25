@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import html
 import logging
 from datetime import datetime, timezone
@@ -366,7 +367,10 @@ def run() -> None:
     app.add_handler(CallbackQueryHandler(callbacks))
 
     LOGGER.info("Bot is running.")
-    app.run_polling()
+    # Python 3.14 may not provide a default event loop in MainThread.
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    app.run_polling(close_loop=False)
 
 
 if __name__ == "__main__":
